@@ -1,7 +1,5 @@
 import { Client } from 'pg';
-import nodemailer from 'nodemailer';
 import * as dotenv from 'dotenv';
-import { NextResponse } from 'next/server';
 
 dotenv.config();
 
@@ -31,11 +29,3 @@ export async function GET() {
     });
   }
 }
-
-export const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: `${userEmail}`,
-    pass: `${pass}`,
-  },
-});
