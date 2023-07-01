@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 import * as dotenv from 'dotenv';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 
 dotenv.config();
@@ -29,12 +29,12 @@ export async function POST(req: NextRequest) {
     };
     await client.query(query);
     console.log('Dados inseridos com sucesso!');
-    return new Response('Dados inseridos com sucesso!', {
+    return new NextResponse('Dados inseridos com sucesso!', {
       status: 200,
     });
   } catch (error) {
     console.error('Ocorreu um erro ao inserir os dados: ', error);
-    return new Response('Ocorreu um erro ao inserir os dados.', {
+    return new NextResponse('Ocorreu um erro ao inserir os dados.', {
       status: 500,
     });
   }
