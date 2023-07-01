@@ -12,7 +12,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='PT-BR'>
+    <html lang='pt-BR'>
       <body className={inter.className}>
         <Menu />
 

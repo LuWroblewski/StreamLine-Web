@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export default function RegisterForm() {
   const [name, setName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -30,17 +30,19 @@ export default function RegisterForm() {
     }
   };
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-
-    const formData = {
-      name,
-      lastName,
-      email,
-      password,
-    };
-    console.log(formData);
-    console.log(selectedFile);
+  const handleSubmit = async (event: any) => {
+    await fetch('./api/auth/register/', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        lastname: lastname,
+        email: email,
+        password: password,
+      }),
+    });
   };
 
   return (
@@ -71,7 +73,7 @@ export default function RegisterForm() {
             <input
               type='text'
               placeholder='Sobrenome'
-              value={lastName}
+              value={lastname}
               onChange={(e) => setLastName(e.target.value)}
               required
               className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 p-2 font-titillium placeholder:text-gray-400 placeholder:p-2 '
