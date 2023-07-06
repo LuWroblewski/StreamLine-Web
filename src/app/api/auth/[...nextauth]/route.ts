@@ -37,6 +37,7 @@ const authOptions = {
             password: password,
           }),
         });
+
         const user = await res.json();
 
         if (user) {
