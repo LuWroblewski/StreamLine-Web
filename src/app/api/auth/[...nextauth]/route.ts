@@ -27,7 +27,7 @@ const authOptions = {
 
       async authorize(credentials: Record<never, string> | undefined) {
         const { email, password } = credentials as ICredentials;
-        const res = await fetch(`https://stream-line-web.vercel.app/api/auth/loginValidate/`, {
+        const res = await fetch(`${url}/api/auth/loginValidate/`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
