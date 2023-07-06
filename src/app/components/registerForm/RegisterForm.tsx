@@ -2,6 +2,7 @@
 
 import { faImage, faUser } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -37,6 +38,7 @@ export default function RegisterForm() {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
+        avatar: selectedFile,
         name: name,
         lastname: lastname,
         email: email,
@@ -148,6 +150,7 @@ export default function RegisterForm() {
         <button
           type='submit'
           className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 '
+          onClick={() => signIn('CredentialsProvider')}
         >
           Salvar
         </button>

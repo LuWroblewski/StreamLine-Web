@@ -1,19 +1,6 @@
-import { Client } from 'pg';
-import * as dotenv from 'dotenv';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
-
-dotenv.config();
-
-const user = process.env.PGUSER;
-const host = process.env.PGHOST;
-const database = process.env.PGDATABASE;
-const password = process.env.PGPASSWORD;
-
-const client = new Client({
-  connectionString: `postgres://${user}:${password}${host}/${database}`,
-  ssl: true,
-});
+import { client } from '../../connection';
 
 export async function POST(request: Request) {
   const data = await request.json();
@@ -23,8 +10,8 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const query = {
-      text: 'INSERT INTO users (firstName, lastName, email, password) VALUES ($1, $2, $3, $4)',
-      values: [data.name, data.lastname, data.email, hashedPassword],
+      text: 'INSERT INTO users (avatar, firstName, lastName, email, password) VALUES ($1, $2, $3, $4, $5)',
+      values: [data.avatar, data.name, data.lastname, data.email, hashedPassword],
     };
     await client.query(query);
     console.log('Dados inseridos com sucesso!');
