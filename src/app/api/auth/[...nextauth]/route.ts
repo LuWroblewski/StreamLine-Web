@@ -1,5 +1,5 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
-import NextAuth from 'next-auth';
+import NextAuth, { User } from 'next-auth';
 import * as dotenv from 'dotenv';
 import { client } from '../../connection';
 import bcrypt from 'bcrypt';
@@ -26,7 +26,7 @@ const authOptions = {
       name: 'Credentials',
       credentials: {},
 
-      async authorize(credentials: Record<never, string> | undefined) {
+      async authorize(credentials, req): Promise<User | null> {
         const { email, password } = credentials as ICredentials;
 
         await client.connect();
@@ -39,15 +39,14 @@ const authOptions = {
         const result = await client.query(query);
 
         if (result.rows.length === 0) {
-          return false;
+          return null;
         }
+
         const hashedPassword = result.rows[0].password;
 
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
 
         if (isPasswordValid) {
-          console.log('Email e senha conferem!');
-
           await client.connect();
           const query = {
             text: 'SELECT firstname, lastname FROM users WHERE email = $1',
@@ -63,15 +62,17 @@ const authOptions = {
               firstname: dbUser.firstname,
               lastname: dbUser.lastname,
             };
-            console.log(userProfile);
 
             return {
-              name: `${userProfile.firstname} ${userProfile.lastname} `,
+              id: email,
+              name: `${userProfile.firstname} ${userProfile.lastname}`,
             };
           } else {
             return null;
           }
         }
+
+        return null;
       },
     }),
   ],
