@@ -11,7 +11,8 @@ type ICredentials = {
 
 const secretAuth = process.env.NEXTAUTH_SECRET;
 const url = process.env.NEXTAUTH_URL;
-export const authOptions = {
+
+const authOptions = {
   secret: secretAuth,
   providers: [
     CredentialsProvider({
