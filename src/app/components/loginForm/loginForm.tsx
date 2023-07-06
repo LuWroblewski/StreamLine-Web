@@ -1,11 +1,9 @@
 'use client';
 
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import { FormEventHandler, useState } from 'react';
 
 export default function LoginForm() {
-  const { push } = useRouter();
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -28,10 +26,6 @@ export default function LoginForm() {
       ...data,
       callbackUrl: '/register',
     });
-
-    if (result?.url) {
-      return push('/');
-    }
   };
 
   return (

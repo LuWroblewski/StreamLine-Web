@@ -1,12 +1,18 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
 import * as dotenv from 'dotenv';
+import { client } from '../../connection';
 
 dotenv.config();
 
 type ICredentials = {
   email: string;
   password: string;
+};
+
+let userProfile = {
+  firstname: undefined,
+  lastname: undefined,
 };
 
 const secretAuth = process.env.NEXTAUTH_SECRET;
@@ -21,7 +27,6 @@ const authOptions = {
 
       async authorize(credentials: Record<never, string> | undefined) {
         const { email, password } = credentials as ICredentials;
-        console.log(email, password);
         const res = await fetch(`${url}/api/auth/loginValidate/`, {
           method: 'POST',
           headers: {
@@ -35,7 +40,31 @@ const authOptions = {
         const user = await res.json();
 
         if (user) {
-          return { ...user, jwt: user.jwt };
+          await client.connect();
+          const query = {
+            text: 'SELECT firstname, lastname FROM users WHERE email = $1',
+            values: [email],
+          };
+
+          const result = await client.query(query);
+
+          if (result.rows.length > 0) {
+            const dbUser = result.rows[0];
+
+            userProfile = {
+              firstname: dbUser.firstname,
+              lastname: dbUser.lastname,
+            };
+            console.log(userProfile);
+
+            return {
+              ...user,
+              jwt: user.jwt,
+              name: `${userProfile.firstname} ${userProfile.lastname} `,
+            };
+          } else {
+            return { ...user, jwt: user.jwt };
+          }
         } else {
           return null;
         }

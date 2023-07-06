@@ -10,8 +10,8 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     const query = {
-      text: 'INSERT INTO users (avatar, firstName, lastName, email, password) VALUES ($1, $2, $3, $4, $5)',
-      values: [data.avatar, data.name, data.lastname, data.email, hashedPassword],
+      text: 'INSERT INTO users ( firstName, lastName, email, password) VALUES ($1, $2, $3, $4)',
+      values: [data.name, data.lastname, data.email, hashedPassword],
     };
     await client.query(query);
     console.log('Dados inseridos com sucesso!');

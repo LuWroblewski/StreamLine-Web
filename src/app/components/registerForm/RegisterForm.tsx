@@ -1,35 +1,20 @@
 'use client';
 
-import { faImage, faUser } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 
 export default function RegisterForm() {
+  const { data: session } = useSession({
+    required: true,
+  });
+
+  console.log(session);
+
   const [name, setName] = useState('');
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedFile, setSelectedFile] = useState<File>();
-
-  const handleFileChange = async (event: any) => {
-    const file = event.target.files[0];
-
-    if (file && file.type !== 'image/jpeg' && file && file.type !== 'image/png') {
-      console.log('a');
-      alert('Apenas arquivos PNG, JPEG OU JPG são permitidos');
-      setSelectedFile(undefined);
-      return;
-    } else if (file.size > 10 * 1024 * 1024) {
-      console.log('b');
-      alert('O tamanho máximo do arquivo é de 10MB.');
-      setSelectedFile(undefined);
-      return;
-    } else {
-      setSelectedFile(file);
-    }
-  };
 
   const handleSubmit = async (event: any) => {
     await fetch('./api/auth/register/', {
@@ -38,7 +23,6 @@ export default function RegisterForm() {
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        avatar: selectedFile,
         name: name,
         lastname: lastname,
         email: email,
@@ -49,6 +33,7 @@ export default function RegisterForm() {
 
   return (
     <form className=' w-auto items-center box-border p-4 lg:px-96 text-[#767676]' onSubmit={handleSubmit}>
+      <p>{session?.user?.name}</p>
       <h1 className=' text-center font-titillium font-bold lg:text-[5vh]'> Bem vindo!</h1>
       <p className=' text-center  font-titillium font-bold lg:text-[2vh]'>
         Por favor, preencha as seguintes informações para completar o registro:
@@ -110,31 +95,6 @@ export default function RegisterForm() {
             />
           </div>
         </div>
-
-        <div className='col-span-full'>
-          <label htmlFor='cover-photo' className='block text-sm font-medium leading-6 text-gray-900'>
-            Escolha uma foto
-            <p>
-              Arquivo selecionado: {selectedFile?.name} | Tipo do arquivo: {selectedFile?.type}
-            </p>
-          </label>
-          <div className='mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10'>
-            <div className='text-center'>
-              <FontAwesomeIcon icon={faImage} className='mx-auto h-12 w-12 text-gray-300 ' aria-hidden='true' />
-              <div className='mt-4 flex text-sm leading-6 text-gray-600'>
-                <label
-                  htmlFor='file-upload'
-                  className='relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500'
-                >
-                  <span className='p-2'>Envie uma foto</span>
-                  <input id='file-upload' type='file' required className='sr-only' onChange={handleFileChange} />
-                </label>
-                <p className='pl-1'> imagem PNG ou JPG/JPEG</p>
-              </div>
-              <p className='text-xs leading-5 text-gray-600 text-end'> (maximo 10MB)</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className='mt-6 flex items-center justify-end gap-x-6 relative pr-2'>
@@ -150,7 +110,6 @@ export default function RegisterForm() {
         <button
           type='submit'
           className='rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 '
-          onClick={() => signIn('CredentialsProvider')}
         >
           Salvar
         </button>
