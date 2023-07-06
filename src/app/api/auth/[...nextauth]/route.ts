@@ -22,7 +22,7 @@ const authOptions = {
       async authorize(credentials: Record<never, string> | undefined) {
         const { email, password } = credentials as ICredentials;
         console.log(email, password);
-        const res = await fetch(`./api/auth/loginValidate/`, {
+        const res = await fetch(`${url}/api/auth/loginValidate/`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
