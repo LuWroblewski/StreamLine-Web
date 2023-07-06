@@ -2,6 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
 import * as dotenv from 'dotenv';
 import { client } from '../../connection';
+import bcrypt from 'bcrypt';
 
 dotenv.config();
 
@@ -27,20 +28,26 @@ const authOptions = {
 
       async authorize(credentials: Record<never, string> | undefined) {
         const { email, password } = credentials as ICredentials;
-        const res = await fetch(`${url}/api/auth/loginValidate/`, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        });
 
-        const user = await res.json();
+        await client.connect();
 
-        if (user) {
+        const query = {
+          text: 'SELECT password FROM users WHERE email = $1',
+          values: [email],
+        };
+
+        const result = await client.query(query);
+
+        if (result.rows.length === 0) {
+          return false;
+        }
+        const hashedPassword = result.rows[0].password;
+
+        const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+
+        if (isPasswordValid) {
+          console.log('Email e senha conferem!');
+
           await client.connect();
           const query = {
             text: 'SELECT firstname, lastname FROM users WHERE email = $1',
@@ -59,15 +66,11 @@ const authOptions = {
             console.log(userProfile);
 
             return {
-              ...user,
-              jwt: user.jwt,
               name: `${userProfile.firstname} ${userProfile.lastname} `,
             };
           } else {
-            return { ...user, jwt: user.jwt };
+            return null;
           }
-        } else {
-          return null;
         }
       },
     }),
