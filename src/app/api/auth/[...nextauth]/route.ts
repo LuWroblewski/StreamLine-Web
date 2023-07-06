@@ -10,7 +10,7 @@ type ICredentials = {
 };
 
 const secretAuth = process.env.NEXTAUTH_SECRET;
-
+const url = process.env.NEXTAUTH_URL;
 export const authOptions = {
   secret: secretAuth,
   providers: [
@@ -21,7 +21,7 @@ export const authOptions = {
       async authorize(credentials: Record<never, string> | undefined) {
         const { email, password } = credentials as ICredentials;
         console.log(email, password);
-        const res = await fetch('./api/auth/loginValidate/', {
+        const res = await fetch(`${url}/api/auth/loginValidate/`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
@@ -32,7 +32,6 @@ export const authOptions = {
           }),
         });
         const user = await res.json();
-        console.log('a' + user);
 
         if (user) {
           return { ...user, jwt: user.jwt };
