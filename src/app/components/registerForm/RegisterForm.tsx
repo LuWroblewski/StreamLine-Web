@@ -3,10 +3,14 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { redirect } from 'next/navigation';
 
 export default function RegisterForm() {
   const { data: session } = useSession({
     required: true,
+    onUnauthenticated() {
+      redirect('/login');
+    },
   });
 
   console.log(session);
@@ -33,7 +37,6 @@ export default function RegisterForm() {
 
   return (
     <form className=' w-auto items-center box-border p-4 lg:px-96 text-[#767676]' onSubmit={handleSubmit}>
-      <p>{session?.user?.name}</p>
       <h1 className=' text-center font-titillium font-bold lg:text-[5vh]'> Bem vindo!</h1>
       <p className=' text-center  font-titillium font-bold lg:text-[2vh]'>
         Por favor, preencha as seguintes informações para completar o registro:

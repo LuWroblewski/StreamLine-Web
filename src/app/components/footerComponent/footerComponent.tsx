@@ -18,7 +18,7 @@ export const FooterComponent = () => {
         </a>
       </p>
       <p className='text-left text-xs font-bold relative top-16 pl-2 lg:pl-4'>
-        <Link href='/register'>Registro </Link>/ <Link href='/login'>Login </Link>
+        <Link href='/login'>Login </Link>
       </p>
     </footer>
   );

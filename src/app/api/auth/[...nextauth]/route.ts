@@ -26,7 +26,7 @@ const authOptions = {
       name: 'Credentials',
       credentials: {},
 
-      async authorize(credentials, req): Promise<User | null> {
+      authorize: async (credentials) => {
         const { email, password } = credentials as ICredentials;
 
         await client.connect();
@@ -70,6 +70,8 @@ const authOptions = {
           } else {
             return null;
           }
+        } else if (!isPasswordValid) {
+          return null;
         }
 
         return null;

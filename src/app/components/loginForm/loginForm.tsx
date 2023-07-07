@@ -2,8 +2,11 @@
 
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { FormEventHandler, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
+  const [exibirParagrafo, setExibirParagrafo] = useState(false);
+  const router = useRouter();
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -17,15 +20,25 @@ export default function LoginForm() {
     }));
   };
 
-  const { data: session } = useSession();
+  const { data: session } = useSession({
+    required: false,
+  });
+
   console.log(session);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event: any) => {
     event.preventDefault();
     const result = await signIn('credentials', {
       ...data,
-      callbackUrl: '/register',
+      redirect: false,
+      callbackUrl: '/profile',
     });
+
+    if (result?.error) {
+      return setExibirParagrafo(true);
+    } else {
+      router.push('/profile');
+    }
   };
 
   return (
@@ -33,15 +46,20 @@ export default function LoginForm() {
       <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
         <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
           <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-            Sign in to your account
+            Logue na sua conta.
           </h2>
         </div>
 
         <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+          {exibirParagrafo && (
+            <p className='text-white font-titillium font-bold bg-red-500 text-center rounded transition-opacity animate-pulse py-2'>
+              Email ou senha errada, tente novamente.
+            </p>
+          )}
           <form className='space-y-6' action='#' method='POST' onSubmit={handleSubmit}>
             <div>
-              <label htmlFor='email' className='block text-sm font-medium leading-6 text-gray-900'>
-                Email address
+              <label htmlFor='email' className='block text-sm font-titillium font-bold leading-6 text-gray-900 pt-2'>
+                Email
               </label>
               <div className='mt-2'>
                 <input
@@ -58,8 +76,8 @@ export default function LoginForm() {
 
             <div>
               <div className='flex items-center justify-between'>
-                <label htmlFor='password' className='block text-sm font-medium leading-6 text-gray-900'>
-                  Password
+                <label htmlFor='password' className='block text-sm font-titillium font-bold leading-6 text-gray-900'>
+                  Senha
                 </label>
               </div>
               <div className='mt-2'>
@@ -74,17 +92,13 @@ export default function LoginForm() {
                 />
               </div>
             </div>
-            <div className='text-sm'>
-              <a href='#' className='font-semibold text-indigo-600 hover:text-indigo-500'>
-                Forgot password?
-              </a>
-            </div>
+
             <div>
               <button
                 type='submit'
-                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+                className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-titillium font-bold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
               >
-                Sign in
+                Entrar
               </button>
             </div>
           </form>
