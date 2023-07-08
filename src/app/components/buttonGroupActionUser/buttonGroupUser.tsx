@@ -37,7 +37,7 @@ export const ButtonGroupActionUser = () => {
                 <p className='h-20 w-10 text-[30px] lg:w-auto lg:h-10'>Adicionar serviços</p>
               </div>
             }
-            className={'bg-yellow-600 text-white py-2 px-4 rounded   w-[32vh] h-16 py-px-[15vh] lg:w-[70vh] '}
+            className={'bg-yellow-600 text-white py-2 px-4 rounded   w-[32vh] h-28 py-px-[15vh] lg:w-[70vh] lg:h-16 '}
           />
         </Link>
       </div>
@@ -50,7 +50,7 @@ export const ButtonGroupActionUser = () => {
                 <p className='h-20 w-10 text-[30px] lg:w-auto lg:h-10'>Remover serviços</p>
               </div>
             }
-            className={'bg-red-600 text-white py-2 px-4 rounded    w-[32vh] h-16 py-px-[15vh] lg:w-[70vh]'}
+            className={'bg-red-600 text-white py-2 px-4 rounded    w-[32vh] h-28 py-px-[15vh] lg:w-[70vh] lg:h-16'}
           />
         </Link>
       </div>
@@ -63,7 +63,7 @@ export const ButtonGroupActionUser = () => {
                 <p className='h-20 w-10 text-[30px] lg:w-auto lg:h-10'>Editar serviços</p>
               </div>
             }
-            className={'bg-blue-700 text-white py-2 px-4 rounded    w-[32vh] h-16 py-px-[15vh] lg:w-[70vh]'}
+            className={'bg-blue-700 text-white py-2 px-4 rounded    w-[32vh] h-28 py-px-[15vh] lg:w-[70vh] lg:h-16'}
           />
         </Link>
       </div>

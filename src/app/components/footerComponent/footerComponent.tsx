@@ -17,7 +17,7 @@ export const FooterComponent = () => {
           LuWroblewski
         </a>
       </p>
-      <p className='text-left text-xs font-bold relative top-16 pl-2 lg:pl-4'>
+      <p className='text-left text-xs font-bold relative top-6 pl-2 lg:pl-4'>
         <Link href='/login'>Login </Link>
       </p>
     </footer>
